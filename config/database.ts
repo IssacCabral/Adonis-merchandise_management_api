@@ -44,6 +44,7 @@ const databaseConfig: DatabaseConfig = {
       },
       migrations: {
         naturalSort: true,
+        disableRollbacksInProduction: true
       },
       healthCheck: true,
       debug: false,
