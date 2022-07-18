@@ -13,7 +13,12 @@ export default class User extends BaseModel {
   public id: number
 
   @column()
-  public secure_id: uuidv4
+  public secure_id: string
+
+  // serializaAs: null, indica que quando eu retornar
+  // um User, não retorna essa coluna
+  @column({serializeAs: null})
+  public rememberMeToken?: string
 
   @column()
   public name: string
@@ -24,10 +29,10 @@ export default class User extends BaseModel {
   @column()
   public email: string
 
-  @column()
-  public password: string
+  @column({serializeAs: null}) // não retornar o password na resposta da request
+  public password: string 
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true }) 
   public createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
@@ -55,7 +60,5 @@ export default class User extends BaseModel {
       user.password = await Hash.make(user.password)
     }
   }
-
-
 
 }
