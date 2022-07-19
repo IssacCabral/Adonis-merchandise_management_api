@@ -1,29 +1,9 @@
-/*
-|--------------------------------------------------------------------------
-| Routes
-|--------------------------------------------------------------------------
-|
-| This file is dedicated for defining HTTP routes. A single file is enough
-| for majority of projects, however you can define routes in different
-| files and just make sure to import them inside this file. For example
-|
-| Define routes in following two files
-| ├── start/routes/cart.ts
-| ├── start/routes/customer.ts
-|
-| and then import them inside `start/routes.ts` as follows
-|
-| import './routes/cart'
-| import './routes/customer'
-|
-*/
-
 import Route from '@ioc:Adonis/Core/Route'
 import Database from '@ioc:Adonis/Lucid/Database'
 
-import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
+import User from 'App/Models/User'
 
-Route.where('id', Route.matchers.number())
+import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 
 // rota para testar a conexão com o banco
 Route.get('/test_db_connections', async ({response}: HttpContextContract) => {
@@ -36,16 +16,15 @@ Route.get('/test_db_connections', async ({response}: HttpContextContract) => {
   })
 })
 
+// public routes
 Route.group(() => {
-  Route.resource('/users', 'UsersController').except(['create', 'edit'])
   Route.post('/login', 'AuthController.login')
+  Route.post('/users', 'UsersController.store')
 }).prefix('v1/api')
 
 // authenticate routes group
 Route.group(() => {
-  Route.get('/test', ({response}) => {
-    return response.ok({message: 'Você está autenticado'})
-  })
+  Route.resource('/users', 'UsersController').except(['store'])
 })  
   .prefix('v1/api')
   .middleware(['auth', 'is:admin,client'])

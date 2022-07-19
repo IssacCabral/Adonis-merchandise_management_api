@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
 
-import {v4 as uuidv4} from 'uuid'
+//import {v4 as uuidv4} from 'uuid'
 import Category from './Category'
 
 export default class Product extends BaseModel {
@@ -9,7 +9,7 @@ export default class Product extends BaseModel {
   public id: number
 
   @column()
-  public secureId: uuidv4
+  public secureId: string
 
   @column()
   public name: string

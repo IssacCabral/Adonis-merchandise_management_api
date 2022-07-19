@@ -4,7 +4,6 @@ import User from 'App/Models/User'
 
 export default class Is {
   public async handle({auth, response}: HttpContextContract, next: () => Promise<void>, guards?: string[]) {
-    // code for middleware goes here. ABOVE THE NEXT CALL
     const userId = auth.user?.id
     let isNext = false
 
