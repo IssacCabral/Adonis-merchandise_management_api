@@ -10,7 +10,6 @@ import UpdateValidator from 'App/Validators/User/UpdateValidator'
 export default class UsersController {
   
   public async index({response}: HttpContextContract) {
-    
     response.status(200).json({message: 'success'})
   }
 
@@ -28,38 +27,40 @@ export default class UsersController {
       'complement'
     ])
 
-    let userCreated
+    let user = new User()
 
-    const trx = await Database.beginGlobalTransaction()
+    const trx = await Database.transaction()
 
     try{
-      userCreated = await User.create(bodyUser, trx)
+      user.fill(bodyUser)
+
+      user.useTransaction(trx)
+
+      await user.save()
+
       const roleClient = await Role.findBy('name', 'client')
 
       if(roleClient) {
-        await userCreated.related('roles').attach([roleClient.id], trx) 
+        await user.related('roles').attach([roleClient.id])
       }
     } catch(error){
-      trx.rollback()
       return response.badRequest({message: 'Error in create User', originalError: error.message})
     } 
-
+    
     try{
-      await userCreated.related('addresses').create(bodyAddress)
+      await user.related('addresses').create(bodyAddress)
     } catch(error){
-      trx.rollback()
       return response.badRequest({message: 'Error in create Address', originalError: error.message})
     }
 
+    trx.commit()
+
     let userFind
     try {
-      userFind = await User.query().where('id', userCreated.id).preload('roles').preload('addresses')
+      userFind = await User.query().where('id', user.id).preload('roles').preload('addresses')
     } catch (error) {
-      trx.rollback()
       return response.badRequest({message: 'Error in find User', originalError: error.message})
     }
-
-    trx.commit()
 
     return response.ok({userFind})
   }
@@ -68,7 +69,7 @@ export default class UsersController {
     response.ok({message: 'Mostra um usuário'})
   }
 
-  public async update({request, response, params}: HttpContextContract) {
+  public async update({auth, request, response, params}: HttpContextContract) {
     await request.validate(UpdateValidator)
 
     const userSecureId = params.id
@@ -84,19 +85,24 @@ export default class UsersController {
       'complement'
     ])
 
-    let userUpdated
+    let userUpdated = new User()
 
-    const trx = await Database.beginGlobalTransaction()
+    const trx = await Database.transaction()
 
     try{
       userUpdated = await User.findByOrFail('secure_id', userSecureId)
 
       userUpdated.useTransaction(trx)
 
+      const checkId = auth.user?.secure_id == userSecureId
+
+      if(!checkId){
+        throw new Error('You don/\'t have permissions to alter other user')
+      }
+
       await userUpdated.merge(bodyUser).save()
      
     } catch(error){
-      trx.rollback()
       return response.badRequest({message: 'Error in update User', originalError: error.message})
     } 
 
@@ -109,19 +115,17 @@ export default class UsersController {
 
       await addressesUpdated.merge(bodyAddress).save()
     } catch(error){
-      trx.rollback()
       return response.badRequest({message: 'Error in update Address', originalError: error.message})
     }
+
+    trx.commit()
 
     let userFind
     try {
       userFind = await User.query().where('id', userUpdated.id).preload('roles').preload('addresses')
     } catch (error) {
-      trx.rollback()
       return response.badRequest({message: 'Error in find User', originalError: error.message})
     }
-
-    trx.commit()
 
     return response.ok({userFind})
   }
