@@ -1,8 +1,6 @@
 import Route from '@ioc:Adonis/Core/Route'
 import Database from '@ioc:Adonis/Lucid/Database'
 
-import User from 'App/Models/User'
-
 import {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 
 // rota para testar a conexão com o banco
@@ -24,7 +22,14 @@ Route.group(() => {
 
 // authenticate routes group
 Route.group(() => {
-  Route.resource('/users', 'UsersController').except(['store'])
+  Route.resource('/users', 'UsersController').except(['store', 'index', 'destroy'])
 })  
   .prefix('v1/api')
-  .middleware(['auth', 'is:admin,client'])
+  .middleware(['auth', 'is:client'])
+
+// Routes admin group  
+Route.group(() => {
+  Route.resource('/users', 'UsersController').only(['index', 'destroy'])
+})  
+  .prefix('v1/api')
+  .middleware(['auth', 'is:admin'])
