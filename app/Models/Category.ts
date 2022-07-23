@@ -1,8 +1,14 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
-export default class Category extends BaseModel {
+import {compose} from '@ioc:Adonis/Core/Helpers'
+import {Filterable} from '@ioc:Adonis/Addons/LucidFilter'
+import CategoryFilter from './Filters/CategoryFilter'
+
+export default class Category extends compose(BaseModel, Filterable) {
   public static table = 'categories'
+
+  public static $filter = () => CategoryFilter
 
   @column({ isPrimary: true })
   public id: number
