@@ -33,7 +33,7 @@ export default class ProductsController {
   public async store({ request, response }: HttpContextContract) {
     await request.validate(StoreValidator)
 
-    const body = request.only(['name', 'code'])
+    const body = request.only(['name', 'code', 'price'])
     const {categories} = request.all()
 
     let productCreated = new Product()
@@ -61,6 +61,7 @@ export default class ProductsController {
 
     try{
       const productFind = await Product.query().where('id', productCreated.id).preload('categories')
+
       return response.ok({productFind})
     } catch(error){
       return response.badRequest({message: 'Error in find Product', originalError: error.message})
@@ -85,7 +86,7 @@ export default class ProductsController {
     await request.validate(UpdateValidator)
 
     const productSecureId = params.id
-    const bodyProduct = request.only(['name', 'code'])
+    const bodyProduct = request.only(['name', 'code', 'price'])
     const {categories} = request.all()
 
     let productUpdated = new Product()

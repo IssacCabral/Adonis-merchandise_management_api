@@ -20,12 +20,15 @@ export default class StoreValidator extends MessagesCustom {
       rules.maxLength(250)
     ]),
 
+    price: schema.number([rules.unsigned()]),
+
     categories: schema
       .array([rules.minLength(1)])
       .members(
         schema.string({trim: true}, [rules.exists({table: 'categories', column: 'name'})])
       )
-  })
     
+  })
+
 
 }

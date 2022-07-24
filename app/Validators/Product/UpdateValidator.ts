@@ -29,6 +29,8 @@ export default class UpdateValidator extends MessagesCustom{
       rules.maxLength(250)
     ]),
 
+    price: schema.number.optional([rules.unsigned()]),
+
     categories: schema.array
       .optional([rules.minLength(1)])
       .members(
