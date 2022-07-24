@@ -58,6 +58,8 @@
     "@adonisjs/lucid": "^18.1.0",
     "@adonisjs/repl": "^3.1.0",
     "adonis-lucid-filter": "^4.1.0",
+    "adonis5-scheduler": "^2.0.2",
+    "dayjs": "^1.11.4",
     "luxon": "^3.0.1",
     "mysql": "^2.18.1",
     "phc-argon2": "^1.1.3",

@@ -5,7 +5,8 @@
     "@adonisjs/core/build/commands/index.js",
     "@adonisjs/repl/build/commands",
     "@adonisjs/lucid/build/commands",
-    "adonis-lucid-filter/build/commands"
+    "adonis-lucid-filter/build/commands",
+    "adonis5-scheduler/build/commands"
   ],
   "exceptionHandlerNamespace": "App/Exceptions/Handler",
   "aliases": {
@@ -23,7 +24,8 @@
     "@adonisjs/core",
     "@adonisjs/lucid",
     "@adonisjs/auth",
-    "adonis-lucid-filter"
+    "adonis-lucid-filter",
+    "adonis5-scheduler"
   ],
   "aceProviders": [
     "@adonisjs/repl"
