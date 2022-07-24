@@ -32,7 +32,9 @@
       "@adonisjs/lucid",
       "@adonisjs/auth",
       "adonis-lucid-filter",
-      "adonis5-scheduler"
+      "adonis5-scheduler",
+      "@adonisjs/mail",
+      "@adonisjs/view"
     ]
   }
 }

@@ -9,6 +9,8 @@ import StoreValidator from 'App/Validators/User/StoreValidator'
 import UpdateValidator from 'App/Validators/User/UpdateValidator'
 import AccessAllowValidator from 'App/Validators/User/AccessAllowValidator'
 
+import { sendEmail } from 'App/Services/sendEmail'
+
 export default class UsersController {
   
   public async index({request, response}: HttpContextContract) {
@@ -75,6 +77,13 @@ export default class UsersController {
       await user.related('addresses').create(bodyAddress)
     } catch(error){
       return response.badRequest({message: 'Error in create Address', originalError: error.message})
+    }
+
+    // send email service
+    try {
+      await sendEmail(user, 'email/welcome')
+    } catch (error) {
+      return response.badRequest({message: 'Error in send welcome email', originalError: error.message})
     }
 
     trx.commit()
