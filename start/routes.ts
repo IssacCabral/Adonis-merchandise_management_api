@@ -11,6 +11,7 @@ Route.group(() => {
   Route.resource('/users', 'UsersController').except(['store', 'index', 'destroy'])
   Route.resource('/products', 'ProductsController').except(['store', 'destroy'])
   Route.resource('/cart', 'CartController').apiOnly()
+  Route.resource('/purchases', 'PurchasesController').only(['index', 'store', 'show'])
 })  
   .prefix('v1/api')
   .middleware(['auth', 'is:client'])
