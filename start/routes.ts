@@ -4,6 +4,8 @@ import Route from '@ioc:Adonis/Core/Route'
 Route.group(() => {
   Route.post('/login', 'AuthController.login')
   Route.post('/users', 'UsersController.store')
+
+  Route.resource('/redis', 'TestRedisController').only(['show', 'store', 'destroy'])
 }).prefix('v1/api')
 
 // Client routes
